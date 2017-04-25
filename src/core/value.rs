@@ -350,21 +350,45 @@ pub trait Function : Const {
         }
     }
 
-    fn add_attr(&mut self, attr: LLVMAttribute) {
+    fn add_attr_at_index(&mut self, index: LLVMAttributeIndex, attr: LLVMAttributeRef) {
         unsafe {
-            LLVMAddFunctionAttr(self.to_ref(), attr)
+            LLVMAddAttributeAtIndex(self.to_ref(), index, attr)
         }
     }
 
-    fn get_attr(&self) -> LLVMAttribute {
+    fn add_target_dependent_attr(&mut self, attr: &str, value: &str) {
+        let attr_str = CString::new(attr).unwrap();
+        let value_str = CString::new(value).unwrap();
         unsafe {
-            LLVMGetFunctionAttr(self.to_ref())
+            LLVMAddTargetDependentFunctionAttr(self.to_ref(), attr_str.as_ptr(), value_str.as_ptr())
         }
     }
 
-    fn remove_attr(&mut self, attr: LLVMAttribute) {
+    fn get_attr_at_index(&self, index: LLVMAttributeIndex) -> Vec<LLVMAttributeRef> {
+        let mut attrs = Vec::with_capacity(20);
         unsafe {
-            LLVMRemoveFunctionAttr(self.to_ref(), attr)
+            LLVMGetAttributeAtIndex(self.to_ref(), index, attrs.as_mut_slice().as_mut_ptr() as *mut LLVMAttributeRef);
+            attrs
+        }
+    }
+
+    fn get_attr_count_at_index(&self, index: LLVMAttributeIndex) -> u32 {
+        unsafe {
+            LLVMGetAttributeCountAtIndex(self.to_ref(), index) as u32
+        }
+    }
+
+    fn remove_string_attr_at_index(&self, index: LLVMAttributeIndex, key: &str) {
+        unsafe {
+            let key_str = CString::new(key).unwrap();
+            let len = key.len() as c_uint;
+            LLVMRemoveStringAttributeAtIndex(self.to_ref(), index, key_str.as_ptr(), len)
+        }
+    }
+
+    fn remove_enum_attr_at_index(&self, index: LLVMAttributeIndex, kind: c_uint) {
+        unsafe {
+            LLVMRemoveEnumAttributeAtIndex(self.to_ref(), index, kind)
         }
     }
 
@@ -477,25 +501,6 @@ pub trait Argument : Value {
             FunctionRef::from_ref(LLVMGetParamParent(self.to_ref()))
         }
     }
-
-    fn add_attr(&self, attr: LLVMAttribute) {
-        unsafe {
-            LLVMAddAttribute(self.to_ref(), attr)
-        }
-    }
-
-    fn get_attr(&self) -> LLVMAttribute {
-        unsafe {
-            LLVMGetAttribute(self.to_ref())
-        }
-    }
-
-    fn remove_attr(&self, attr: LLVMAttribute) {
-        unsafe {
-            LLVMRemoveAttribute(self.to_ref(), attr)
-        }
-    }
-
     fn set_alignment(&self, align: u32) {
         unsafe {
             LLVMSetParamAlignment(self.to_ref(), align)
