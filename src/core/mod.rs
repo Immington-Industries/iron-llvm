@@ -14,6 +14,7 @@ pub use self::context::Context;
 pub use self::module::Module;
 pub use self::pass_manager::{FunctionPassManager, PassManager};
 pub use self::value::{Function, FunctionRef, Value};
+pub use self::attribute::Attribute;
 
 pub mod basic_block;
 pub mod builder;
@@ -23,3 +24,4 @@ pub mod module;
 pub mod pass_manager;
 pub mod types;
 pub mod value;
+pub mod attribute;
