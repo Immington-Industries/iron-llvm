@@ -7,7 +7,7 @@ build = "build.rs"
 
 [dependencies]
 libc = "0.2"
-llvm-sys = { path = "../llvm-sys.rs" }
+llvm-sys = { git="https://github.com/SnirkImmington/llvm-sys.rs-fork-mirror" }
 
 [build-dependencies]
 cmake = "0.1.12"
