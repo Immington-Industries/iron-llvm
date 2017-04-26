@@ -367,7 +367,7 @@ pub trait Function : Const {
     fn get_attr_at_index(&self, index: LLVMAttributeIndex) -> Vec<LLVMAttributeRef> {
         let mut attrs = Vec::with_capacity(20);
         unsafe {
-            LLVMGetAttributeAtIndex(self.to_ref(), index, attrs.as_mut_slice().as_mut_ptr() as *mut LLVMAttributeRef);
+            LLVMGetAttributesAtIndex(self.to_ref(), index, attrs.as_mut_slice().as_mut_ptr() as *mut LLVMAttributeRef);
             attrs
         }
     }
