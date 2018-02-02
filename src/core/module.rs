@@ -51,7 +51,7 @@ impl Module {
 
     pub fn get_data_layout(&self) -> String {
         unsafe {
-            let buf = std::ffi::CStr::from_ptr(LLVMGetDataLayoutStr(self.to_ref()));
+            let buf = std::ffi::CStr::from_ptr(LLVMGetDataLayout(self.to_ref()));
             String::from_utf8_lossy(buf.to_bytes()).into_owned()
         }
     }

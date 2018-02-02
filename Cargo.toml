@@ -7,7 +7,7 @@ build = "build.rs"
 
 [dependencies]
 libc = "0.2"
-llvm-sys = "39"
+llvm-sys = "0.4"
 
 [build-dependencies]
 cmake = "0.1.12"
